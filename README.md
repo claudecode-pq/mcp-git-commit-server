@@ -1,0 +1,1 @@
+# mcp-git-commit-server
