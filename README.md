@@ -2,57 +2,69 @@
 
 MCP server that analyzes staged git changes and executes conventional commits. Communicates via stdio transport; no compilation required.
 
-## Prerequisites
+## Configuration
 
-- [Node.js](https://nodejs.org/) v18+
-- [pnpm](https://pnpm.io/)
-- git
+All examples use `npx` to run the server directly from npm — no local clone needed.
 
-## Installation
+### Claude Desktop
 
-```bash
-git clone https://github.com/claudecode-pq/mcp-git-commit-server.git
-cd mcp-git-commit-server
-pnpm install
-```
+Edit your `claude_desktop_config.json`:
 
-## Usage
-
-### As an MCP server (Claude Desktop)
-
-Add to your `claude_desktop_config.json`:
+- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "git-commit": {
-      "command": "pnpm",
-      "args": ["--prefix", "/path/to/mcp-git-commit-server", "start"]
+      "command": "npx",
+      "args": ["-y", "@claudecode-pq/mcp-git-commit-server"]
     }
   }
 }
 ```
 
-### Run directly
+### Claude Code
+
+**Via CLI (recommended):**
 
 ```bash
-pnpm start
+# Project-scoped
+claude mcp add git-commit npx -- -y @claudecode-pq/mcp-git-commit-server
+
+# Global
+claude mcp add --scope user git-commit npx -- -y @claudecode-pq/mcp-git-commit-server
 ```
 
-The server communicates over stdio and is designed to be invoked by an MCP client.
+**Via settings file** — project (`.claude/settings.json`) or global (`~/.claude/settings.json`):
 
-## Commands
+```json
+{
+  "mcpServers": {
+    "git-commit": {
+      "command": "npx",
+      "args": ["-y", "@claudecode-pq/mcp-git-commit-server"],
+      "type": "stdio"
+    }
+  }
+}
+```
 
-<!-- AUTO-GENERATED from package.json scripts -->
+### VSCode
 
-| Command              | Description                                                         |
-| -------------------- | ------------------------------------------------------------------- |
-| `pnpm start`         | Run MCP server (tsx executes TypeScript directly — no compile step) |
-| `pnpm test`          | Run test suite once                                                 |
-| `pnpm test:watch`    | Re-run tests on file change                                         |
-| `pnpm test:coverage` | Coverage report → `./coverage/` (v8 provider)                       |
+Create `.vscode/mcp.json` in your workspace root:
 
-<!-- AUTO-GENERATED -->
+```json
+{
+  "servers": {
+    "git-commit": {
+      "command": "npx",
+      "args": ["-y", "@claudecode-pq/mcp-git-commit-server"],
+      "type": "stdio"
+    }
+  }
+}
+```
 
 ## MCP Tools
 
@@ -108,24 +120,3 @@ Files are classified by the first matching rule (priority order):
 <!-- AUTO-GENERATED -->
 
 **Module** = first path segment of the changed file (`src/utils/foo.ts` → `src`). Root-level files get module `root`.
-
-## Known Gotchas
-
-- **`pnpm-lock.yaml` → `fix`** (not `chore`) — the chore rule checks the `.lock` extension, which misses YAML-format lockfiles.
-- **`package.json` → `build`** (not `chore`) — matched by the build rule's explicit filename list.
-- **No `console.log` in tool handlers** — the server writes to stdout for MCP transport; logging to stdout corrupts the protocol.
-
-## Architecture
-
-All logic lives in a single file, `index.ts` (~163 lines). No compilation step — `tsx` executes TypeScript directly.
-
-| File               | Purpose                                                    |
-| ------------------ | ---------------------------------------------------------- |
-| `index.ts`         | MCP server + tool implementations + `getGroupedChanges()`  |
-| `index.test.ts`    | Vitest suite (292 lines) — mocks `execSync`/`execFileSync` |
-| `vitest.config.ts` | Coverage config; v8 provider, reports to `./coverage/`     |
-| `package.json`     | pnpm scripts; deps: `@modelcontextprotocol/sdk`, `zod`     |
-
-## License
-
-MIT

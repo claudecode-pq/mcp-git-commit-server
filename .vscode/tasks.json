@@ -26,10 +26,21 @@
       "problemMatcher": []
     },
     {
-      "label": "vitest: run tests",
+      "label": "run build",
       "type": "shell",
       "command": "pnpm",
-      "args": ["vitest", "run"],
+      "args": ["run", "build"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "run format",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "format"],
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -37,10 +48,22 @@
       "problemMatcher": []
     },
     {
-      "label": "vitest: run tests in watch mode",
+      "label": "run inspector",
       "type": "shell",
       "command": "pnpm",
-      "args": ["vitest", "watch"],
+      "args": ["run", "inspector"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": [],
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "run lint",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "lint"],
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -48,10 +71,43 @@
       "problemMatcher": []
     },
     {
-      "label": "vitest: run tests in watch mode with coverage",
+      "label": "run lint with fix",
       "type": "shell",
       "command": "pnpm",
-      "args": ["vitest", "watch", "--coverage"],
+      "args": ["run", "lint:fix"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "run tests",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "test"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "run tests in watch mode",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "test:watch"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "run tests in watch mode with coverage",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "test:coverage"],
       "options": {
         "cwd": "${workspaceFolder}"
       },
