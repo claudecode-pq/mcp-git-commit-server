@@ -89,7 +89,7 @@
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "group": "none",
+      "group": "test",
       "problemMatcher": []
     },
     {
@@ -100,7 +100,7 @@
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "group": "none",
+      "group": "test",
       "problemMatcher": []
     },
     {
@@ -108,6 +108,72 @@
       "type": "shell",
       "command": "pnpm",
       "args": ["run", "test:coverage"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "git fetch, and set upstream for current branch",
+      "type": "shell",
+      "command": "git fetch origin && git branch -u origin/$(git branch --show-current)",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "git fetch, and rebase",
+      "type": "shell",
+      "command": "git fetch origin && git rebase origin/$(git branch --show-current) --autostash",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "git fetch, rebase, and push current branch",
+      "type": "shell",
+      "command": "git fetch origin && git rebase origin/$(git branch --show-current) --autostash && git push -u origin $(git branch --show-current) --force-with-lease",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "git fetch, and rebase onto main",
+      "type": "shell",
+      "command": "git fetch origin && git rebase origin/main --autostash",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "git fetch, rebase onto main, and push current branch",
+      "type": "shell",
+      "command": "git fetch origin && git rebase origin/main --autostash && git push -u origin $(git branch --show-current) --force-with-lease",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "git push current branch with force-with-lease",
+      "type": "shell",
+      "command": "git push -u origin $(git branch --show-current) --force-with-lease",
+      "args": [],
       "options": {
         "cwd": "${workspaceFolder}"
       },
