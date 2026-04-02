@@ -16,5 +16,5 @@ claude mcp add --transport stdio filesystem -- npx -y @modelcontextprotocol/serv
 claude mcp add --transport stdio git -- uvx mcp-server-git --repository $(pwd) || true
 claude mcp add --transport stdio lean-ctx -- lean-ctx || true
 claude mcp add --transport stdio sequential-thinking -- npx -y @modelcontextprotocol/server-sequential-thinking || true
-claude mcp add --transport stdio git-commit-server -- node "$(pwd)/index.ts" || true
+claude mcp add --transport stdio git-commit-server -- node "$(pwd)/build/index.js" || true
 claude mcp list
