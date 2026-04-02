@@ -120,13 +120,3 @@ Files are classified by the first matching rule (priority order):
 <!-- AUTO-GENERATED -->
 
 **Module** = first path segment of the changed file (`src/utils/foo.ts` → `src`). Root-level files get module `root`.
-
-## Known Gotchas
-
-- **`pnpm-lock.yaml` → `fix`** (not `chore`) — the chore rule checks the `.lock` extension, which misses YAML-format lockfiles.
-- **`package.json` → `build`** (not `chore`) — matched by the build rule's explicit filename list.
-- **No `console.log` in tool handlers** — the server writes to stdout for MCP transport; logging to stdout corrupts the protocol.
-
-## License
-
-MIT
