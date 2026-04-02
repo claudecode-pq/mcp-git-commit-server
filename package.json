@@ -1,0 +1,58 @@
+{
+  "name": "@claudecode-pq/mcp-git-commit-server",
+  "version": "1.0.0",
+  "description": "MCP server that analyzes staged git changes and executes conventional commits via Claude",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "mcp-git-commit-server": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "git",
+    "conventional-commits",
+    "claude"
+  ],
+  "author": "Patrick Joseph Quijano",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/claudecode-pq/mcp-git-commit-server.git"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "pnpm run build",
+    "start": "tsx index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@vitest/coverage-v8": "^4.1.2",
+    "tsx": "^4.19.4",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.2"
+  }
+}
