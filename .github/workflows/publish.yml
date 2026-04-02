@@ -38,8 +38,11 @@ jobs:
       - name: Build the project
         run: pnpm run build
 
-      - name: Run tests
+      - name: Run test
         run: pnpm run test
+
+      - name: Run lint
+        run: pnpm run lint
 
       - name: Release
         env:
