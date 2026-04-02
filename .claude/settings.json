@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": ["Bash", "Edit", "Read", "Write"],
+    "deny": [
+      "Edit(.env)",
+      "Edit(.env.production)",
+      "Edit(.env.staging)",
+      "Read(.vscode/**)",
+      "Read(node_modules/**)"
+    ],
+    "defaultMode": "plan"
+  }
+}
