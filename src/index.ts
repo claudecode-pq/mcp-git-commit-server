@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
@@ -19,7 +20,6 @@ export function getGroupedChanges() {
       encoding: 'utf8'
     }).trim();
     if (!output) return { message: 'No uncommitted changes found.' };
-
     const groups: Record<string, string[]> = {};
     output.split('\n').forEach((line: string) => {
       const status = line.slice(0, 2).trim();
@@ -27,9 +27,7 @@ export function getGroupedChanges() {
       const parts = path.split('/');
       const module = parts.length > 1 ? parts[0] : 'root';
       const filename = parts[parts.length - 1] ?? '';
-
       let type: string;
-
       if (
         path.includes('test') ||
         path.includes('spec') ||
@@ -89,7 +87,6 @@ export function getGroupedChanges() {
       } else {
         type = 'fix';
       }
-
       const key = `${type}(${module})`;
       if (!groups[key]) groups[key] = [];
       groups[key].push(path);
@@ -102,21 +99,54 @@ export function getGroupedChanges() {
 }
 
 /**
+ * Handler for the get_staged_analysis tool
+ */
+export async function getStagedAnalysisHandler() {
+  return {
+    content: [
+      {
+        type: 'text' as const,
+        text: JSON.stringify(getGroupedChanges(), null, 2)
+      }
+    ]
+  };
+}
+
+/**
+ * Handler for the execute_commit tool
+ */
+export function executeCommit(commitMessage: string) {
+  try {
+    execFileSync('git', ['add', '.']);
+    const stdout = execFileSync('git', ['commit', '-m', commitMessage], {
+      encoding: 'utf8'
+    });
+    return { content: [{ type: 'text' as const, text: `Success: ${stdout}` }] };
+  } catch (error: unknown) {
+    return {
+      content: [
+        {
+          type: 'text' as const,
+          text: `Error: ${error instanceof Error ? error.message : String(error)}`
+        }
+      ]
+    };
+  }
+}
+
+/**
  * 1. Register: get_staged_analysis
  * This tool analyzes the current git status and returns a token-dense summary of changes grouped by type and module.
  */
 server.registerTool(
   'get_staged_analysis',
   {
+    title: 'Analyze Staged Changes',
     description:
       'Returns a token-dense summary of git changes grouped by type and module',
-    inputSchema: z.object({}) // Using Zod for the schema
+    inputSchema: z.object({})
   },
-  async () => ({
-    content: [
-      { type: 'text', text: JSON.stringify(getGroupedChanges(), null, 2) }
-    ]
-  })
+  getStagedAnalysisHandler
 );
 
 /**
@@ -126,6 +156,7 @@ server.registerTool(
 server.registerTool(
   'execute_commit',
   {
+    title: 'Execute Commit',
     description: 'Stages all files and executes a formatted git commit',
     inputSchema: z.object({
       commit_message: z
@@ -133,32 +164,22 @@ server.registerTool(
         .describe('The formatted message: <type>(<module>): <description>')
     })
   },
-  async ({ commit_message }) => {
-    try {
-      execFileSync('git', ['add', '.']);
-      const stdout = execFileSync('git', ['commit', '-m', commit_message], {
-        encoding: 'utf8'
-      });
-      return { content: [{ type: 'text', text: `Success: ${stdout}` }] };
-    } catch (error: any) {
-      return {
-        content: [
-          { type: 'text', text: `Error: ${error.stderr || error.message}` }
-        ]
-      };
-    }
-  }
+  /* v8 ignore next */
+  async ({ commit_message }) => executeCommit(commit_message)
 );
 
 /**
  * Start the server and connect it to the standard I/O transport. This allows the server to communicate with clients through the console.
  */
+/* v8 ignore next 4 */
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
 }
 
 // Run the main function and catch any unhandled errors
+/* v8 ignore next 3 */
 if (process.env['VITEST'] !== 'true') {
+  // eslint-disable-next-line no-console
   main().catch(console.error);
 }
