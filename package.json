@@ -1,6 +1,6 @@
 {
   "name": "@claudecode-pq/mcp-git-commit-server",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "MCP server that analyzes staged git changes and executes conventional commits via Claude",
   "type": "module",
   "main": "build/index.js",
