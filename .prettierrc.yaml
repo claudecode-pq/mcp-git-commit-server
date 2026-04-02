@@ -1,0 +1,5 @@
+arrowParens: avoid
+bracketSameLine: true
+singleAttributePerLine: true
+singleQuote: true
+trailingComma: none
