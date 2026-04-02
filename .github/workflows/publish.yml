@@ -65,13 +65,17 @@ jobs:
           VERSION: ${{ env.VERSION }}
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
-        with:
-          tag_name: 'v${{ env.VERSION }}'
-          release_name: 'v${{ env.VERSION }}'
-          body: 'Release v${{ env.VERSION }}'
-          draft: false
-          prerelease: false
+        uses: actions/github-script@v8
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ env.VERSION }}
+        with:
+          script: |
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `v${process.env.VERSION}`,
+              name: `v${process.env.VERSION}`,
+              body: `Release v${process.env.VERSION}`,
+              draft: false,
+              prerelease: false
+            });
