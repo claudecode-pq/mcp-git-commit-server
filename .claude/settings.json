@@ -1,6 +1,6 @@
 {
   "permissions": {
-    "allow": ["Bash", "Edit", "Read", "Write"],
+    "allow": ["Bash", "Edit", "Read", "Update", "Write"],
     "deny": [
       "Edit(.env)",
       "Edit(.env.production)",
