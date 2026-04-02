@@ -9,17 +9,21 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
+      contents: write
       id-token: write
-      contents: read
+      issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: latest
+          version: 10
 
       - name: Setup Node.js (LTS)
         uses: actions/setup-node@v6
@@ -31,8 +35,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Build the project
         run: pnpm run build
 
-      - name: Publish to NPM
-        run: pnpm publish --no-git-checks --tag latest
+      - name: Run tests
+        run: pnpm run test
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_PROVENANCE: "true"
+        run: pnpm exec semantic-release
